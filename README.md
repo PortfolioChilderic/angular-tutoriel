@@ -8,6 +8,7 @@ Ce projet est basé sur le tutoriel officiel Angular 19 : [First App](https://an
 - Recherche de logements par ville
 - Navigation vers une page de détails pour chaque logement
 - Formulaire de contact pour chaque logement
+- Communication avec une API simulée via JSON Server
 
 ## 🛠️ Technologies utilisées
 
@@ -15,6 +16,7 @@ Ce projet est basé sur le tutoriel officiel Angular 19 : [First App](https://an
 - TypeScript
 - Angular CLI
 - RxJS
+- JSON Server (pour simuler une API REST)
 
 ## ▶️ Lancement de l'application
 
@@ -63,7 +65,8 @@ src/
 │   ├── housing.service.ts  # Service gérant les données des logements
 │   ├── housinglocation.ts  # Interface définissant la structure d'un logement
 |   └── routes.ts           # Fichier définissant la configuration des routes de l'application
-└── assets/                 # Contient les images et autres ressources statiques
+├── assets/                 # Contient les images et autres ressources statiques
+└── db.json                 # Fichier de données utilisé par JSON Server
 ```
 
 ## 📚 Ce que j'ai appris
@@ -72,6 +75,8 @@ src/
 - Mise en place du routage pour naviguer entre les vues
 - Création et utilisation de services pour gérer les données
 - Intégration de formulaires et gestion des événements
+- Communication avec une API REST simulée via HTTP
+
 
 ## 📄 Licence
 
