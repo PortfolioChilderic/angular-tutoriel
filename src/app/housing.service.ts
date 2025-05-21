@@ -1,16 +1,18 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HousingLocation } from './housinglocation';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HousingService {
-  url = 'http://localhost:3000/locations';
-  housingLocationList: HousingLocation[] = [];
+  private url = 'http://localhost:3000/locations';
+  private http = inject(HttpClient);
 
-  async getAllHousingLocations(): Promise<HousingLocation[]> {
-    const data = await fetch(this.url);
-    return (await data.json()) ?? [];
+
+  getAllHousingLocations(): Observable<HousingLocation[]> {
+    return this.http.get<HousingLocation[]>(this.url);
   }
 
   async getHousingLocationById(id: number): Promise<HousingLocation | undefined> {

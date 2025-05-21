@@ -1,12 +1,14 @@
 import { Component, inject } from '@angular/core';
-import {HousingLocationComponent} from '../housing-location/housing-location.component';
+import { HousingLocationComponent } from '../housing-location/housing-location.component';
 import { HousingLocation } from '../housinglocation';
 import { CommonModule } from '@angular/common';
-import {HousingService} from '../housing.service';
+import { HousingService } from '../housing.service';
 import { FormsModule } from '@angular/forms';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
+  standalone: true,
   imports: [HousingLocationComponent, CommonModule, FormsModule],
   template: `
     <section>
@@ -17,7 +19,7 @@ import { FormsModule } from '@angular/forms';
     </section>
     <section class="results">
       <app-housing-location
-        *ngFor="let housingLocation of filteredLocationList"
+        *ngFor="let housingLocation of filteredLocationList$ | async"
         [housingLocation]="housingLocation"
       ></app-housing-location>
     </section>
@@ -25,23 +27,20 @@ import { FormsModule } from '@angular/forms';
   styleUrls: [`./home.component.css`]
 })
 export class HomeComponent {
-  housingLocationList: HousingLocation[] = [];
   housingService: HousingService = inject(HousingService);
-  filteredLocationList: HousingLocation[] = [];
+  housingLocationList$: Observable<HousingLocation[]> = this.housingService.getAllHousingLocations();
+  filteredLocationList$: Observable<HousingLocation[]> = this.housingLocationList$;
 
-  constructor() {
-    this.housingService.getAllHousingLocations().then((housingLocationList: HousingLocation[]) => {
-      this.housingLocationList = housingLocationList;
-      this.filteredLocationList = housingLocationList;
-    });
-  }
+
   filterResults(text: string) {
-    if (!text) {
-      this.filteredLocationList = this.housingLocationList;
-      return;
-    }
-    this.filteredLocationList = this.housingLocationList.filter((housingLocation) =>
-      housingLocation?.city.toLowerCase().includes(text.toLowerCase()),
-    );
+    this.filteredLocationList$ = new Observable((observer) => {
+      this.housingLocationList$.subscribe((housingLocations) => {
+        const filter = text
+          ? housingLocations.filter(housingLocation => housingLocation?.city.toLowerCase().includes(text.toLowerCase()))
+          : housingLocations;
+        observer.next(filter);
+        observer.complete();
+      })
+    })
   }
 }
